@@ -65,6 +65,8 @@ jwt.io 에서 나의 토큰값을 넣었을 때 ->
 ![image](https://github.com/anjaehun/mission_reservation/assets/77096665/ff8acc3d-bcdb-4c6f-8235-7e9e386a4336)
 
 
+참고한 youtube 강의 
+link : https://www.youtube.com/watch?v=KxqlJblhzfI&t=5951s 
 
 
 
