@@ -90,10 +90,8 @@ public class storeController {
     }
 
     /**
-     * 별점이 높은 순으로 전체 조회
-     */
-    /**
-     * 리스트 중 가나다 순으로 전체 조회
+     * 별점 순으로 조회
+     * @return
      */
     @GetMapping("/list/starSort")
     public ResponseEntity<List<StoreEntity>> getStoreStarSort() {
@@ -128,6 +126,11 @@ public class storeController {
         }
     }
 
+    /**
+     * 매장 삭제 1건
+     * @param storeId
+     * @return
+     */
     @DeleteMapping("/delete/{storeId}")
     @PreAuthorize("hasAuthority('PARTNER_USER')")
     public ResponseEntity<Map<String, String>> deleteStore(

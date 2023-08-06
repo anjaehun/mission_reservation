@@ -22,6 +22,13 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
     @Query("SELECT r FROM ReservationEntity r JOIN FETCH r.store s WHERE r.reservationAuthor = :reservationAuthor")
     List<ReservationEntity> findByReservationAuthor(@Param("reservationAuthor")String reservationAuthor); //reservationAuthor
 
+    /**
+     * reservation_role -> HOLD 인 것 중
+     * 예약 한 후 10분 지나면
+     * reservation_role -> TIME_OVER_CANCEL 으로 변경
+     * DATE_ADD : 컬럼에 10분 추가
+     * @param currentTime
+     */
     @Modifying
     @Query(value = "UPDATE reservation " +
             "SET reservation_role = 'TIME_OVER_CANCEL' " +

@@ -39,7 +39,6 @@ public class StoreReviewService {
         // 닉네임이 이미 존재하는지 확인
         List<StoreReviewEntity> reviews = storeReviewRepository.findByStore(store);
 
-
         double totalRating = 0;
         double totalReviews = reviews.size();
 
@@ -50,7 +49,6 @@ public class StoreReviewService {
         double averageRating = totalRating / totalReviews;
         return averageRating;
     }
-
 
     public StoreReviewEntity postStoreReview(StoreReviewPostRequest storeReviewPostRequest, long storeId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -79,6 +77,8 @@ public class StoreReviewService {
         // 닉네임이 이미 존재하는지 확인
        List<StoreReviewEntity> reviews = storeReviewRepository.findByStore(store);
 
+        System.out.println("reviews" + reviews);
+
 
         LocalDateTime currentTime = LocalDateTime.now();
         
@@ -89,7 +89,6 @@ public class StoreReviewService {
                 .store(store) // 조회한 StoreEntity 객체를 할당
                 .registerDt(currentTime)
                 .build();
-
 
         storeReviewRepository.save(storeReview);
 

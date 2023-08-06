@@ -100,7 +100,7 @@ public class StoreService {
     // 가까운 매장 순
     public List<StoreEntity> getAllStoresNear(double xCoordinate, double yCoordinate) {
         List<StoreEntity> storeList = storeRepository.findAll();
-        storeList.sort(Comparator.comparing(StoreEntity::getStoreName)); // 가나다 순으로 정렬
+        storeList.sort(Comparator.comparing(StoreEntity::getStoreName));
 
         // 거리 기준으로 정렬
         storeList.sort(Comparator.comparing(store
