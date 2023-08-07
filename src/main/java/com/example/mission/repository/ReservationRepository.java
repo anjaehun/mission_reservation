@@ -40,4 +40,6 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
 
     @Query("SELECT r FROM ReservationEntity r JOIN FETCH r.store s WHERE r.reservationId = :reservationId")
     ReservationEntity findByReservationId(@Param("reservationId") Long reservationId);
+
+    void deleteByStore(StoreEntity store);
 }

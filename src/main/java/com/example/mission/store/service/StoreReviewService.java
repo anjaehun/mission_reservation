@@ -50,6 +50,13 @@ public class StoreReviewService {
         return averageRating;
     }
 
+    /**
+     * 댓글 , 별점을 달 수 있음
+     * 별점을 달 때 마다 가게의 별점의 평균이 나온다.
+     * @param storeReviewPostRequest
+     * @param storeId
+     * @return
+     */
     public StoreReviewEntity postStoreReview(StoreReviewPostRequest storeReviewPostRequest, long storeId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

@@ -223,6 +223,7 @@ public class ReservationService {
 
     /**
      * 가게 점주가 예약을 받을 상황이 안되어 예약 거절
+     * resevationRole -> PARTNER_USER_CANCEL 변경
      * @param reservationId
      * @return
      * @throws NoSameAutherException
@@ -248,6 +249,7 @@ public class ReservationService {
 
     /**
      * 가게 점주가 예약한 손님을 응대하고 끝냄
+     * resevationRole -> PARTNER_USER_CANCEL 변경 ㅇㅇ
      * @param reservationId
      * @return
      * @throws NoSameAutherException

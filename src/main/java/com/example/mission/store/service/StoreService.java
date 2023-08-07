@@ -33,7 +33,15 @@ public class StoreService {
 
     private final StoreReviewRepository storeReviewRepository;
 
+    private final ReservationRepository reservationRepository;
 
+
+    /**
+     * 매장 글 등록
+     * -> 특이사항 : 로그인 한 유저의 정보 중 닉네임을 가져와 author 에 기재
+     * @param request
+     * @return
+     */
     public StoreEntity write(StorePostRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -80,16 +88,27 @@ public class StoreService {
         return storeRepository.findAll();
     }
 
-
+    /**
+     * 한건의 데이터 조회
+     * @param storeId
+     * @return
+     * @throws ResourceNotFoundException
+     */
     @Transactional
     public List<StoreReviewEntity> getStoreAndReviewsById(Long storeId) throws ResourceNotFoundException {
         StoreEntity store = storeRepository.findById(Math.toIntExact(storeId))
-                .orElseThrow(() -> new ResourceNotFoundException("Store not found with id: " + storeId));
+                .orElseThrow(() -> new ResourceNotFoundException("가게 정보가 없습니다. 번호는 : " + storeId + "입니다."));
 
         List<StoreReviewEntity> reviews = storeReviewRepository.findByStore(store);
 
         return reviews;
     }
+
+    /**
+     * 가나다 순으로 조회
+     * storeList.sort(Comparator.comparing(StoreEntity::getStoreName)) -> 정렬 코드
+     * @return
+     */
     // 가나다 순
     public List<StoreEntity> getAllStoresSorted() {
         List<StoreEntity> storeList = storeRepository.findAll();
@@ -97,6 +116,12 @@ public class StoreService {
         return storeList;
     }
 
+    /**
+     * 가까운 매장순으로 조회
+     * storeList.sort(Comparator.comparing(StoreEntity::getStoreName)) -> 정렬 코드
+     * 특이사항 : calculateDistance 함수(Haversine 공식 적용한 메소드) 를 이용해 정렬 함
+     * @return
+     */
     // 가까운 매장 순
     public List<StoreEntity> getAllStoresNear(double xCoordinate, double yCoordinate) {
         List<StoreEntity> storeList = storeRepository.findAll();
@@ -109,7 +134,14 @@ public class StoreService {
         return storeList;
     }
 
-    // Haversine 공식을 이용하여 두 지점 간의 거리 계산
+    /**
+     * Haversine 공식을 이용하여 두 지점 간의 거리 계산
+     * @param lat1
+     * @param lon1
+     * @param lat2
+     * @param lon2
+     * @return
+     */
     private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         final int R = 6371; // 지구 반지름 (단위: km)
 
@@ -125,6 +157,10 @@ public class StoreService {
         return R * c;
     }
 
+    /**
+     * 별점 순으로 정렬
+     * @return
+     */
     public List<StoreEntity> getAllStarsSort() {
         List<StoreEntity> storeList = storeRepository.findAll();
         storeList.sort(Comparator.comparingDouble(StoreEntity::getStar).reversed()); // star를 내림차순으로 정렬
@@ -132,6 +168,14 @@ public class StoreService {
         return storeList;
     }
 
+    /**
+     * 가게 업데이트
+     * @param storeId
+     * @param request
+     * @return
+     * @throws ResourceNotFoundException
+     * @throws NoSameAutherException
+     */
     public Object update(Long storeId, StorePostRequest request) throws ResourceNotFoundException, NoSameAutherException {
 
         StoreEntity storeEntity = storeRepository.findById(Math.toIntExact(storeId))
@@ -175,6 +219,14 @@ public class StoreService {
         return storeRepository.save(storeEntity);
     }
 
+    /**
+     * 가게 삭제
+     * 리뷰,예약도 같이 지운다.
+     * @param storeId
+     * @return
+     * @throws ResourceNotFoundException
+     * @throws NoSameAutherException
+     */
     @Transactional
     public StoreEntity deleteStore(Long storeId) throws ResourceNotFoundException, NoSameAutherException {
         StoreEntity storeEntity = storeRepository.findById(Math.toIntExact(storeId))
@@ -207,6 +259,7 @@ public class StoreService {
         }
 
         storeReviewRepository.deleteByStore(storeEntity);
+        reservationRepository.deleteByStore(storeEntity);
         storeRepository.delete(storeEntity);
 
         return storeEntity;
