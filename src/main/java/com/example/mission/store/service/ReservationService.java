@@ -41,7 +41,11 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-
+    /**
+     * 회원 정보를 가져 오는 역활
+     * -> 접속중인 유저의 닉네임을 가져온다
+     * @return
+     */
     public String userNickname(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -65,7 +69,14 @@ public class ReservationService {
         return nickname;
     }
 
-
+    /**
+     * 유저가 예약을 등록한다 .
+     * reservationRole -> HOLD -> 최초 예약시 상태값
+     * @param request
+     * @param storeId
+     * @return
+     * @throws ReservationDatePassedException
+     */
     public ReservationEntity postReservation(ReservationPostRequest request, Long storeId) throws  ReservationDatePassedException {
         String nickname = userNickname(); // 테스트용 nickname, 필요에 따라 별도의 사용자 정보를 얻어오도록 변경
 
@@ -104,12 +115,18 @@ public class ReservationService {
         return reservationEntity;
     }
 
-
+    /**
+     * 접속중인 닉네임을 찾아서 유저가 예약한 정보를 조회
+     * @return
+     */
     public List<ReservationEntity> findByNickname() {
         String nickname = userNickname();
         return reservationRepository.findByNickname(nickname);
     }
-
+    /**
+     * 접속중인  닉네임을 찾아서 파트너 유저가 예약한 정보를 조회
+     * @return
+     */
     public List<ReservationEntity> findByReservationAuthor() throws NoSameAutherException {
         String reservationAuthor = userNickname();
         List<ReservationEntity> findReserviationAuthor = reservationRepository.findByReservationAuthor(reservationAuthor);
@@ -129,7 +146,13 @@ public class ReservationService {
         reservationRepository.updateReservationRoleToTimeOverCancel(currentTime);
     }
 
-
+    /**
+     * 가게 점주가 직접 업데이트
+     * reservationRole -> HOLD 에서 OK 로 변경
+     * @param reservationId
+     * @return
+     * @throws NoSameAutherException
+     */
     public ReservationEntity updateRoleStatusByStoreOwner(Long reservationId) throws NoSameAutherException {
         ReservationEntity reservation = reservationRepository.findByReservationId(reservationId);
 
@@ -249,7 +272,7 @@ public class ReservationService {
 
     /**
      * 가게 점주가 예약한 손님을 응대하고 끝냄
-     * resevationRole -> PARTNER_USER_CANCEL 변경 ㅇㅇ
+     * resevationRole -> PARTNER_USER_CANCEL 변경
      * @param reservationId
      * @return
      * @throws NoSameAutherException

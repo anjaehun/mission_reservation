@@ -30,6 +30,14 @@ public class AuthenticationService {
     private final JwtService jwtService;
 
     private final AuthenticationManager authenticationManager;
+
+    /**
+     * 회원 가입 관련 메소드
+     * 특이사항 : 일반회원가입
+     * Role이 USER 로 들어감
+     * @param request
+     * @return
+     */
     public AuthenticationResponse register(RegisterRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
@@ -73,6 +81,13 @@ public class AuthenticationService {
                 .build();
     }
 
+    /**
+     * 파트너 회원 가입 관련 메소드
+     * 특이사항 : 파트너
+     * Role이 PARTNER_USER 로 들어감
+     * @param request
+     * @return
+     */
     public AuthenticationResponse partnerRegister(PartnerRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
@@ -117,6 +132,11 @@ public class AuthenticationService {
                 .build();
     }
 
+    /**
+     * 로그인(파트너, 일반 회원가입 가능)
+     * @param request
+     * @return
+     */
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
            new UsernamePasswordAuthenticationToken(
